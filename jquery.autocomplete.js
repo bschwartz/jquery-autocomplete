@@ -249,7 +249,7 @@ $.Autocompleter = function(input, options) {
 		if ( !value ) {
 			return [""];
 		}
-		var words = value.split( options.multipleSeparator );
+		var words = value.split( $.trim(options.multipleSeparator) );
 		var result = [];
 		$.each(words, function(i, value) {
 			if ( $.trim(value) )

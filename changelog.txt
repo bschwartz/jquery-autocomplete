@@ -1,3 +1,7 @@
+1.0.3
+----
+* Adjusted multiple mode so a multipleSeparator of ", " will start a new search after "," as well as ", "
+
 1.0.2
 -----
 * Fixed missing semicolon
