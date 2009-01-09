@@ -219,6 +219,7 @@ $.Autocompleter = function(input, options) {
 		}
 		
 		$input.val(v);
+		$input.scrollTop($input[0].scrollHeight); // scroll to bottom
 		hideResultsNow();
 		$input.trigger("result", [selected.data, selected.value]);
 		return true;
