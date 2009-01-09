@@ -1,6 +1,9 @@
 1.0.3
 ----
 * Adjusted multiple mode so a multipleSeparator of ", " will start a new search after "," as well as ", "
+* Fixed width calculation. Using innerWidth() instead of width() to account for padding.
+* Added freeKeyBrowse option to allow a user to freely navigate the textbox with arrow keys when the selection box is not visible.
+* Fixed bug that caused text area to scroll to the top after a selection is made.
 
 1.0.2
 -----

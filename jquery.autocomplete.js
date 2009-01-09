@@ -1,5 +1,5 @@
 /*
- * Autocomplete - jQuery plugin 1.0.2
+ * Autocomplete - jQuery plugin 1.0.3
  *
  * Copyright (c) 2007 Dylan Verheul, Dan G. Switzer, Anjesh Tuladhar, Jörn Zaefferer
  *
