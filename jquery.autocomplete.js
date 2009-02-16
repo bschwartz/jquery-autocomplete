@@ -547,6 +547,9 @@ $.Autocompleter.Cache = function(options) {
 			 * to loop through all the data collections looking for matches
 			 */
 			if( !options.url && options.matchContains ){
+				// stop the autocomplete for really long terms and QS filtering
+				if (options.quicksilverStyleFiltering && q.length > 15) return [];
+				
 				// track all matches
 				var csub = [];
 				var scores = [];
