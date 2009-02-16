@@ -1,5 +1,5 @@
 /*
- * Autocomplete - jQuery plugin 1.0.3
+ * Autocomplete - jQuery plugin 1.0.4
  *
  * Copyright (c) 2007 Dylan Verheul, Dan G. Switzer, Anjesh Tuladhar, Jörn Zaefferer
  *
@@ -411,8 +411,42 @@ $.Autocompleter.defaults = {
 	multiple: false,
 	multipleSeparator: ", ",
 	freeKeyBrowse: false,
-	highlight: function(value, term) {
-		return value.replace(new RegExp("(?![^&;]+;)(?!<[^<>]*)(" + term.replace(/([\^\$\(\)\[\]\{\}\*\.\+\?\|\\])/gi, "\\$1") + ")(?![^<>]*>)(?![^&;]+;)", "gi"), "<strong>$1</strong>");
+	quicksilverStyleFiltering: false,
+	highlight: function(value, raw_term) {
+		// QuickSilver highlighting -- highlights characters in sequence
+		// v: Hello Mr. Pibbs
+		// t: llps
+		// >: He<strong>l</strong><strong>l</strong>o Mr. <strong>P</strong>ibb<strong>s</strong>
+		var hValue = '';
+		var t_idx = 0;
+		var term = raw_term.toLowerCase();
+		for(var v_idx = 0; v_idx < value.length; v_idx++) {
+			// skip over tags and the like
+			if (value[v_idx] == '<') {
+	  		// skip ahead until we reach the end of the tag
+				while (v_idx < value.length && value[v_idx] != '>') {
+					hValue += value[v_idx];
+					v_idx++;
+				}
+			} else if (value[v_idx] == '&') {
+				// skip ahead until we reach the end of html escaped char
+				while (v_idx < value.length && value[v_idx] != ';') {
+					hValue += value[v_idx];
+					v_idx++;
+				}
+			}
+			
+			// highlight characters
+			if(value[v_idx].toLowerCase() == term[t_idx]) {
+				hValue += "<strong>" + value[v_idx] + "</strong>";
+				t_idx++;
+			} else {
+				hValue += value[v_idx];
+			}
+		}
+		
+		return hValue;
+		//return value.replace(new RegExp("(?![^&;]+;)(?!<[^<>]*)(" + term.replace(/([\^\$\(\)\[\]\{\}\*\.\+\?\|\\])/gi, "\\$1") + ")(?![^<>]*>)(?![^&;]+;)", "gi"), "<strong>$1</strong>");
 	},
     scroll: true,
     scrollHeight: 180
@@ -515,6 +549,7 @@ $.Autocompleter.Cache = function(options) {
 			if( !options.url && options.matchContains ){
 				// track all matches
 				var csub = [];
+				var scores = [];
 				// loop through all the data grids for matches
 				for( var k in data ){
 					// don't search through the stMatchSets[""] (minChars: 0) cache
@@ -522,13 +557,24 @@ $.Autocompleter.Cache = function(options) {
 					if( k.length > 0 ){
 						var c = data[k];
 						$.each(c, function(i, x) {
-							// if we've got a match, add it to the array
-							if (matchSubset(x.value, q)) {
-								csub.push(x);
+							if (options.quicksilverStyleFiltering) {
+								var score = x.value.toLowerCase().score(q);
+								if (score > 0) scores.push([score, x]);
+							} else {
+								// if we've got a match, add it to the array
+								if (matchSubset(x.value, q)) csub.push(x);
 							}
 						});
 					}
-				}				
+				}
+				
+				if (options.quicksilverStyleFiltering) {
+					// sort results by score
+					jQuery.each(scores.sort(function(a, b){ return b[0] - a[0]; }), function(){
+						csub.push(this[1])
+					});
+				}
+				
 				return csub;
 			} else 
 			// if the exact item exists, use it

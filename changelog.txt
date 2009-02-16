@@ -1,3 +1,8 @@
+1.0.4
+----
+* Feature: QuickSilver-style search for local complete
+* Updated default highlight function to support the QS-style search
+
 1.0.3
 ----
 * Adjusted multiple mode so a multipleSeparator of ", " will start a new search after "," as well as ", "
