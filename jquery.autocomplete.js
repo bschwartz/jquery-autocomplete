@@ -422,26 +422,26 @@ $.Autocompleter.defaults = {
 		var term = raw_term.toLowerCase();
 		for(var v_idx = 0; v_idx < value.length; v_idx++) {
 			// skip over tags and the like
-			if (value[v_idx] == '<') {
+			if (value.charAt(v_idx) == '<') {
 	  		// skip ahead until we reach the end of the tag
-				while (v_idx < value.length && value[v_idx] != '>') {
-					hValue += value[v_idx];
+				while (v_idx < value.length && value.charAt(v_idx) != '>') {
+					hValue += value.charAt(v_idx);
 					v_idx++;
 				}
-			} else if (value[v_idx] == '&') {
+			} else if (value.charAt(v_idx) == '&') {
 				// skip ahead until we reach the end of html escaped char
-				while (v_idx < value.length && value[v_idx] != ';') {
-					hValue += value[v_idx];
+				while (v_idx < value.length && value.charAt(v_idx) != ';') {
+					hValue += value.charAt(v_idx);
 					v_idx++;
 				}
 			}
 			
 			// highlight characters
-			if(value[v_idx].toLowerCase() == term[t_idx]) {
-				hValue += "<strong>" + value[v_idx] + "</strong>";
+			if(value.charAt(v_idx).toLowerCase() == term.charAt(t_idx)) {
+				hValue += "<strong>" + value.charAt(v_idx) + "</strong>";
 				t_idx++;
 			} else {
-				hValue += value[v_idx];
+				hValue += value.charAt(v_idx);
 			}
 		}
 		
@@ -549,7 +549,7 @@ $.Autocompleter.Cache = function(options) {
 			if( !options.url && options.matchContains ){
 				// stop the autocomplete for really long terms and QS filtering
 				if (options.quicksilverStyleFiltering && q.length > 15) return [];
-				
+
 				// track all matches
 				var csub = [];
 				var scores = [];
